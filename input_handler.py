@@ -12,17 +12,17 @@ class EventHandler(tcod.event.EventDispatch[Action]):
         action: Optional[Action] = None
 
         key = event.sym
+        t_event = tcod.event
 
-        if key == tcod.event.K_UP:
-            action = BumpAction(dx=0,dy=-1)
-        elif key == tcod.event.K_DOWN:
-            action = BumpAction(dx=0,dy=1)
-        elif key == tcod.event.K_LEFT:
-            action = BumpAction(dx=-1,dy=0)
-        elif key == tcod.event.K_RIGHT:
+        if key == t_event.K_UP:
+            action = BumpAction(dx=0, dy=-1)
+        elif key == t_event.K_DOWN:
+            action = BumpAction(dx=0, dy=1)
+        elif key == t_event.K_LEFT:
+            action = BumpAction(dx=-1, dy=0)
+        elif key == t_event.K_RIGHT:
             action = BumpAction(dx=1, dy=0)
-        
-        elif key == tcod.event.K_ESCAPE:
+        elif key == t_event.K_ESCAPE:
             action = EscapeAction()
-
+        
         return action

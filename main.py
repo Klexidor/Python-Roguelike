@@ -1,9 +1,10 @@
 import tcod
 import copy
-import entity_factories
-
-from engine import Engine
 from input_handler import EventHandler
+from entity import Entity
+from engine import Engine
+from game_map import GameMap
+import entity_factories
 from procgen import generate_dungeon
 
 def main() -> None:
@@ -19,28 +20,39 @@ def main() -> None:
 
     max_monsters_per_room = 2
 
-    tileset = tcod.tileset.load_tilesheet("./img/demo_tiles.png", 32, 8, tcod.tileset.CHARMAP_TCOD)
+    tileset = tcod.tileset.load_tilesheet("spritesheet.png", 32, 8, tcod.tileset.CHARMAP_TCOD)
 
     event_handler = EventHandler()
 
     player = copy.deepcopy(entity_factories.player)
 
-    game_map = generate_dungeon(max_rooms, room_min_size, room_max_size, map_width, map_height, player, max_monsters_per_room)
+    game_map = generate_dungeon(
+        max_rooms=max_rooms,
+        room_min_size=room_min_size,
+        room_max_size=room_max_size,
+        map_width=map_width,
+        map_height=map_height,
+        max_monsters_per_room=max_monsters_per_room,
+        player=player
+    )
 
-    engine = Engine(event_handler=event_handler, game_map=game_map, player=player)
+    engine = Engine(event_handler, game_map, player)
 
     with tcod.context.new_terminal(
         screen_width,
         screen_height,
         tileset=tileset,
-        title="Python Roguelike",
+        title="My Basic Roguelike",
         vsync=True,
     ) as context:
         root_console = tcod.Console(screen_width, screen_height, order="F")
+
         while True:
-                engine.render(root_console, context)
-                events = tcod.event.wait()
-                engine.handle_events(events)
+            engine.render(root_console, context)
+
+            events = tcod.event.wait()
+
+            engine.handle_events(events)
 
 if __name__ == "__main__":
     main()
